@@ -24,6 +24,15 @@ final class ConfirmButton: UIButton {
         return label
     }()
     
+    func setConstraints() {
+        self.addSubview(title)
+        
+        self.layer.cornerRadius = 4
+        title.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+    
     func configure(title: String, isAvailable: Bool = false) {
         self.title.text = title
         toggle = self.isAvailable
