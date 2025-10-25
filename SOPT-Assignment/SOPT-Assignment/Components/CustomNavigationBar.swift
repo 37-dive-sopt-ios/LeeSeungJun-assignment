@@ -27,7 +27,7 @@ class CustomNavigationBar: UIView {
     }
     
     func configure(title: String,
-                   isLeftButtonShown: Bool = true,
+                   isLeftButtonShown: Bool = false,
                    delegate: UIViewController) {
         titleLabel.text = title
         backButton.isHidden = isLeftButtonShown
@@ -37,10 +37,18 @@ class CustomNavigationBar: UIView {
         self.addSubview(backButton)
         self.addSubview(titleLabel)
         
+        self.snp.makeConstraints { make in
+            make.height.equalTo(42)
+        }
+        
         backButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(18)
+            make.leading.equalToSuperview().offset(8)
             make.centerY.equalToSuperview()
-            make.height.width.equalTo(16)
+            make.height.width.equalTo(42).priority(.high)
+        }
+        
+        backButton.imageView?.snp.makeConstraints { make in
+            make.width.height.equalTo(26)
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -61,4 +69,8 @@ class CustomNavigationBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+}
+
+#Preview {
+    LoginViewController()
 }
