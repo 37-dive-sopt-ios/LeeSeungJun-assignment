@@ -5,4 +5,47 @@
 //  Created by 이승준 on 10/25/25.
 //
 
-import Foundation
+import UIKit
+import SnapKit
+import Then
+
+class CustomNavigationBar: UIView {
+    
+    private lazy var backButton = UIButton().then {
+        $0.setImage(.leftPointer, for: .normal)
+    }
+    
+    private lazy var titleLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 18, weight: .semibold)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setConstraints()
+    }
+    
+    func configure(title: String, isLeftButtonShown: Bool = true) {
+        titleLabel.text = title
+        backButton.isHidden = isLeftButtonShown
+    }
+    
+    func setConstraints() {
+        self.addSubview(backButton)
+        self.addSubview(titleLabel)
+        
+        backButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(18)
+            make.centerY.equalToSuperview()
+            make.height.width.equalTo(16)
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
