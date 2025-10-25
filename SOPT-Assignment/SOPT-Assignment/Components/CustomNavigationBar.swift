@@ -48,7 +48,7 @@ class CustomNavigationBar: UIView {
         }
         
         backButton.imageView?.snp.makeConstraints { make in
-            make.width.height.equalTo(26)
+            make.width.height.equalTo(20)
         }
         
         titleLabel.snp.makeConstraints { make in
