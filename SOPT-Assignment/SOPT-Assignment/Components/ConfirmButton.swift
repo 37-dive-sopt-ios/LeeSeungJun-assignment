@@ -29,6 +29,11 @@ final class ConfirmButton: UIButton {
         self.addSubview(title)
         
         self.layer.cornerRadius = 4
+        
+        self.snp.makeConstraints { make in
+            make.height.equalTo(46)
+        }
+        
         title.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
