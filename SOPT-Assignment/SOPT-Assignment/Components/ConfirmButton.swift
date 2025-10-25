@@ -15,6 +15,7 @@ final class ConfirmButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setConstraints()
     }
         
     private lazy var title: UILabel = {
@@ -24,7 +25,7 @@ final class ConfirmButton: UIButton {
         return label
     }()
     
-    func setConstraints() {
+    private func setConstraints() {
         self.addSubview(title)
         
         self.layer.cornerRadius = 4
