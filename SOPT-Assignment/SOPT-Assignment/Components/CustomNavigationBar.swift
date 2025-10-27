@@ -15,6 +15,7 @@ class CustomNavigationBar: UIView {
     
     private lazy var backButton = UIButton().then {
         $0.setImage(.leftPointer, for: .normal)
+        $0.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     
     private lazy var titleLabel = UILabel().then {
@@ -31,6 +32,7 @@ class CustomNavigationBar: UIView {
                    delegate: UIViewController) {
         titleLabel.text = title
         backButton.isHidden = isLeftButtonShown
+        self.delegate = delegate
     }
     
     func setConstraints() {
@@ -59,8 +61,10 @@ class CustomNavigationBar: UIView {
     @objc func backButtonTapped() {
         guard let delegate = delegate else { return }
         if delegate.navigationController != nil {
+            print("pop")
             delegate.navigationController?.popViewController(animated: true)
         } else {
+            print("dismiss")
             delegate.dismiss(animated: true)
         }
     }
