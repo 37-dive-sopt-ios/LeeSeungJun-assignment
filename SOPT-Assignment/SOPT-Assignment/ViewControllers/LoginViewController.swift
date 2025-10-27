@@ -17,6 +17,8 @@ class LoginViewController: UIViewController {
     
     private lazy var loginButton = ConfirmButton().then {
         $0.configure(title: "로그인")
+        $0.setAvailableMode()
+        $0.addTarget(self, action: #selector(pushWelcomeViewController), for: .touchUpInside)
     }
     
     private lazy var emailIdTextField = designedTextField().then {
@@ -44,6 +46,11 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .white
         configureUI()
         hideKeyboardWhenTappedAround()
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    @objc func pushWelcomeViewController() {
+        self.navigationController?.pushViewController(WelcomeViewController(), animated: true)
     }
     
     @objc func toggleHidingPassword() {
@@ -181,5 +188,5 @@ extension UIViewController {
 
 
 #Preview {
-    LoginViewController()
+    UINavigationController(rootViewController: LoginViewController())
 }
