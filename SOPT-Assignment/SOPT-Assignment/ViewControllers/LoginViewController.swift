@@ -32,6 +32,7 @@ class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
     private lazy var clearPasswordButton = UIButton().then {
         $0.setImage(.crossGray, for: .normal)
         $0.isHidden = true
+        $0.addTarget(self, action: #selector(clearTextField), for: .touchUpInside)
     }
     
     private lazy var toggleHidePasswordButton = UIButton().then {
@@ -51,6 +52,11 @@ class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
     func didTapGoBackButton() {
         emailIdTextField.text = ""
         passwordTextField.text = ""
+    }
+    
+    @objc func clearTextField() {
+        passwordTextField.text = ""
+        loginButton.setUnavailableMode()
     }
     
     @objc func pushWelcomeViewController() {
