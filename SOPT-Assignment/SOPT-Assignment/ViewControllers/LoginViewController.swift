@@ -177,7 +177,7 @@ extension LoginViewController {
         textField.layer.borderColor = UIColor.gray.cgColor
         textField.layer.masksToBounds = true
         textField.layer.cornerRadius = 4
-        textField.font = .systemFont(ofSize: 14)
+        textField.font = UIFont(name: Pretendard.Regular.name(), size: 14)
         
         textField.delegate = self
         

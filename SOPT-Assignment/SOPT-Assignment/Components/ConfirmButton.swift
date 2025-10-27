@@ -21,7 +21,7 @@ final class ConfirmButton: UIButton {
     private lazy var title: UILabel = {
        let label = UILabel()
         label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 18)
+        label.font = UIFont(name: Pretendard.Bold.name(), size: 18)
         return label
     }()
     

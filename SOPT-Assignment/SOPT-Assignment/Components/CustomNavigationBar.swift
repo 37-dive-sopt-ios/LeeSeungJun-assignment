@@ -19,7 +19,7 @@ class CustomNavigationBar: UIView {
     }
     
     private lazy var titleLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 18, weight: .semibold)
+        $0.font = UIFont(name: Pretendard.Bold.name(), size: 18)
     }
     
     override init(frame: CGRect) {

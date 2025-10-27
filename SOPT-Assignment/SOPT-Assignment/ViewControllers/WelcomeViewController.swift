@@ -42,13 +42,13 @@ class WelcomeViewController: UIViewController {
     private lazy var welcomeMainLabel = UILabel().then {
         $0.text = "환영합니다."
         $0.textAlignment = .center
-        $0.font = .systemFont(ofSize: 24, weight: .bold)
+        $0.font = UIFont(name: Pretendard.Bold.name(), size: 24)
     }
     
     private lazy var welcomeSubLabel = UILabel().then {
         $0.text = "반가워요"
         $0.textAlignment = .center
-        $0.font = .systemFont(ofSize: 18, weight: .semibold)
+        $0.font = UIFont(name: Pretendard.SemiBold.name(), size: 18)
         $0.numberOfLines = 1
     }
     
