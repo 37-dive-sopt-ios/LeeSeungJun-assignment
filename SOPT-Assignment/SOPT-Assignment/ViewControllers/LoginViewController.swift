@@ -17,7 +17,6 @@ class LoginViewController: UIViewController {
     
     private lazy var loginButton = ConfirmButton().then {
         $0.configure(title: "로그인")
-        $0.setAvailableMode()
         $0.addTarget(self, action: #selector(pushWelcomeViewController), for: .touchUpInside)
     }
     
@@ -76,6 +75,41 @@ extension LoginViewController: UITextFieldDelegate {
         }
     }
     
+    // 입력, 삭제할 때마다 호출
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // textField.text (편집 이전의 Text)
+        // string : 추가된 텍스트 (긴 글을 붙여넣을 수 있으므로 String)
+        
+        // NSRange: TextField가 모두 지워질 때의 값 알아보기
+        // location = 0, length = textField.text.count
+        
+        // " " 공백 입력 무시
+        if string == " " {
+            // 추후에 경고를 띄울 수도 있다.
+            return false
+        }
+        
+        checkLoginButtonValid(textField, range: range, replacementString: string)
+        return true
+    }
+    
+    // 버튼의 활성화 여부를 결정
+    func checkLoginButtonValid(_ textField: UITextField, range: NSRange, replacementString string: String) {
+        if !string.isEmpty // 추가된 것에 대한 동작
+            && ((textField == emailIdTextField && passwordTextField.text?.isEmpty == false)
+            || (textField == passwordTextField && emailIdTextField.text?.isEmpty == false))
+        {
+            loginButton.setAvailableMode()
+        }
+        else if
+            string.isEmpty // 삭저된 것에 대한 동작 -> 해당 TextField의 값이 모두 지워진 것인지 조사
+            && range.location == 0
+            && range.length == textField.text?.count
+        {
+            loginButton.setUnavailableMode()
+        }
+        // print(300)
+    }
 }
 
 // MARK: - UI
