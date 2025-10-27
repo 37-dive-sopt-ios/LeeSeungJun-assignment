@@ -36,9 +36,9 @@ class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
     }
     
     private lazy var toggleHidePasswordButton = UIButton().then {
-        $0.setImage(.eyeSlash, for: .normal)
+        $0.setImage(.eye, for: .normal)
         $0.isHidden = true
-        $0.addTarget(self, action: #selector(toggleHidingPassword), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(toggleHidePasswordButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLoad() {
@@ -59,6 +59,11 @@ class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
         loginButton.setUnavailableMode()
     }
     
+    @objc func toggleHidePasswordButtonTapped() {
+        self.passwordTextField.isSecureTextEntry.toggle()
+        self.toggleHidePasswordButton.setImage(self.passwordTextField.isSecureTextEntry ? .eye : .eyeSlash , for: .normal)
+    }
+    
     @objc func pushWelcomeViewController() {
         let vc = WelcomeViewController()
         vc.configure(email: emailIdTextField.text!, delegate: self)
@@ -66,9 +71,6 @@ class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    @objc func toggleHidingPassword() {
-        self.passwordTextField.isSecureTextEntry.toggle()
-    }
 }
 
 extension LoginViewController: UITextFieldDelegate {
