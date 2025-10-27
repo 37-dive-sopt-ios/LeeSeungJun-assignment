@@ -49,7 +49,10 @@ class LoginViewController: UIViewController {
     }
     
     @objc func pushWelcomeViewController() {
-        self.navigationController?.pushViewController(WelcomeViewController(), animated: true)
+        let vc = WelcomeViewController()
+        vc.configure(email: emailIdTextField.text!)
+        // 강제 언래핑 : 버튼은 TextField.text가 반드시 채워져야지만 활성화되기 때문에 사용했다.
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func toggleHidingPassword() {

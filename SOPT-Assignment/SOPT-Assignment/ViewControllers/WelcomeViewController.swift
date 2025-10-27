@@ -43,6 +43,10 @@ class WelcomeViewController: UIViewController {
         setConstraints()
     }
     
+    func configure(email: String) {
+        welcomeSubLabel.text = "\(email)님 반가워요!"
+    }
+    
     func addSubviews() {
         [navigationBar, imaeView, welcomeMainLabel, welcomeSubLabel, goBackButton].forEach {
             view.addSubview($0)
