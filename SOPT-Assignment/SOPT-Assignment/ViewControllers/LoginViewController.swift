@@ -41,6 +41,12 @@ class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
         $0.addTarget(self, action: #selector(toggleHidePasswordButtonTapped), for: .touchUpInside)
     }
     
+    private lazy var findAccountButton = UIButton().then {
+        $0.setTitle("계정 찾기 >", for: .normal)
+        $0.setTitleColor(.baeminBlack, for: .normal)
+        $0.titleLabel?.font = UIFont(name: Pretendard.Regular.name(), size: 14)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -132,7 +138,8 @@ extension LoginViewController {
     
     private func configureUI() {
         [customNavigationBar, emailIdTextField, passwordTextField,
-         clearPasswordButton, loginButton, toggleHidePasswordButton].forEach {
+         clearPasswordButton, loginButton, toggleHidePasswordButton,
+         findAccountButton].forEach {
             view.addSubview($0)
         }
         
@@ -168,6 +175,11 @@ extension LoginViewController {
         
         loginButton.snp.makeConstraints { make in
             make.top.equalTo(passwordTextField.snp.bottom).offset(20)
+        }
+        
+        findAccountButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(loginButton.snp.bottom).offset(32)
         }
     }
     
