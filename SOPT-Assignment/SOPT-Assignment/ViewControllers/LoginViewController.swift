@@ -9,7 +9,12 @@ import UIKit
 import SnapKit
 import Then
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
+    
+    func didTapGoBackButton() {
+        emailIdTextField.text = ""
+        passwordTextField.text = ""
+    }
     
     private lazy var customNavigationBar = CustomNavigationBar().then {
         $0.configure(title: "이메일 또는 아이디로 계속", delegate: self)
@@ -50,7 +55,7 @@ class LoginViewController: UIViewController {
     
     @objc func pushWelcomeViewController() {
         let vc = WelcomeViewController()
-        vc.configure(email: emailIdTextField.text!)
+        vc.configure(email: emailIdTextField.text!, delegate: self)
         // 강제 언래핑 : 버튼은 TextField.text가 반드시 채워져야지만 활성화되기 때문에 사용했다.
         self.navigationController?.pushViewController(vc, animated: true)
     }

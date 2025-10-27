@@ -9,7 +9,27 @@ import UIKit
 import SnapKit
 import Then
 
+protocol WelcomeViewControllerDelegate: AnyObject {
+    func didTapGoBackButton()
+}
+
 class WelcomeViewController: UIViewController {
+    
+    private weak var delegate: WelcomeViewControllerDelegate?
+    // WelcomeVC는 LoginVC의 참조 카운트를 증가시키지 않는다.
+    // 0. LoginVC는 let WelcomeVC로 참조 카운트를 증가시킨다.
+    // 1. welcomeVC는 메모리에서 해제된다.
+    // 2. LoginVC의 메서드를 동작시킨다.
+        // 강한 순환 참조가 일어나는 조건
+        // 2.1. 만약, 메서드가 오래 걸리는 비동기 함수이고 강한 참조인 경우
+            // Login +2 / Welcome +1
+        // 2.2. 메서드의 종료 이전에 VC가 화면에서 사라진 경우
+            // Login +1 / Welcome +1
+        // 2.3. LoginVC와 WelcomeVC 간의 강한 순환 참조가 발생하게 된다.
+            // Login <-> Welcome
+    // 3. weak 이므로 LoginVC는 메모리에서 해제된다. -> welcomeVC 또한 해제된다.
+            // Login +1 / Welcome +1
+            // Login 0 -> deinit -> Welcome 0 -> deinit
     
     private lazy var navigationBar = CustomNavigationBar().then {
         $0.configure(title: "대체 누가 뼈짐 시켰어??", delegate: self)
@@ -34,6 +54,7 @@ class WelcomeViewController: UIViewController {
     
     private lazy var goBackButton = ConfirmButton().then {
         $0.configure(title: "뒤로가기", isAvailable: true)
+        $0.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLoad() {
@@ -43,8 +64,15 @@ class WelcomeViewController: UIViewController {
         setConstraints()
     }
     
-    func configure(email: String) {
+    @objc func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        guard let delegate = self.delegate else { return }
+        delegate.didTapGoBackButton()
+    }
+    
+    func configure(email: String, delegate: WelcomeViewControllerDelegate) {
         welcomeSubLabel.text = "\(email)님 반가워요!"
+        self.delegate = delegate
     }
     
     func addSubviews() {
