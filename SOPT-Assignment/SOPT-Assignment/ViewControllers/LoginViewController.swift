@@ -116,7 +116,6 @@ extension LoginViewController: UITextFieldDelegate {
         {
             loginButton.setUnavailableMode()
         }
-        // print(300)
     }
 }
 
