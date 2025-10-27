@@ -11,11 +11,6 @@ import Then
 
 class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
     
-    func didTapGoBackButton() {
-        emailIdTextField.text = ""
-        passwordTextField.text = ""
-    }
-    
     private lazy var customNavigationBar = CustomNavigationBar().then {
         $0.configure(title: "이메일 또는 아이디로 계속", delegate: self)
     }
@@ -51,6 +46,11 @@ class LoginViewController: UIViewController, WelcomeViewControllerDelegate {
         configureUI()
         hideKeyboardWhenTappedAround()
         self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    func didTapGoBackButton() {
+        emailIdTextField.text = ""
+        passwordTextField.text = ""
     }
     
     @objc func pushWelcomeViewController() {
@@ -184,49 +184,6 @@ extension LoginViewController {
     }
     
 }
-
-extension UITextField {
-    func addLeftPadding(_ width: CGFloat = 10) {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: self.frame.height))
-        self.leftView = paddingView
-        self.leftViewMode = ViewMode.always
-    }
-    
-    func addRightPadding(_ width: CGFloat = 10) {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: self.frame.height))
-        self.rightView = paddingView
-        self.rightViewMode = ViewMode.always
-    }
-    
-        /// 텍스트 필드에 좌우 패딩을 한 번에 추가합니다.
-    func addPadding(leftAmount: CGFloat = 10, rightAmount: CGFloat = 10) {
-        addLeftPadding(leftAmount)
-        addRightPadding(rightAmount)
-    }
-    
-    func setEdittingMode() {
-        self.layer.borderColor = UIColor.baeminBlack.cgColor
-        self.layer.borderWidth = 2
-    }
-    
-    func setEdittingEndMode() {
-        self.layer.borderColor = UIColor.gray.cgColor
-        self.layer.borderWidth = 1
-    }
-}
-
-extension UIViewController {
-    func hideKeyboardWhenTappedAround() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
-}
-
 
 #Preview {
     UINavigationController(rootViewController: LoginViewController())
