@@ -50,7 +50,7 @@ final class ConfirmButton: UIButton {
     }
     
     func setUnavailableMode() {
-        self.backgroundColor = .baeminGray
+        self.backgroundColor = .baeminGray200
         toggle = false
         self.isEnabled = false
     }

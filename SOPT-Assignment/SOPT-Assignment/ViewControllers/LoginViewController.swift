@@ -178,6 +178,7 @@ extension LoginViewController {
         textField.layer.masksToBounds = true
         textField.layer.cornerRadius = 4
         textField.font = UIFont(name: Pretendard.Regular.name(), size: 14)
+        textField.tintColor = .baeminMint
         
         textField.delegate = self
         
