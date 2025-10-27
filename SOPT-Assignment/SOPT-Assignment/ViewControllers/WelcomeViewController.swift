@@ -94,7 +94,7 @@ class WelcomeViewController: UIViewController {
         
         imaeView.snp.makeConstraints { make in
             make.top.equalTo(navigationBar.snp.bottom)
-            make.height.equalTo(211)
+            make.height.equalTo(imaeView.snp.width).multipliedBy(211.0/375.0)
         }
         
         welcomeMainLabel.snp.makeConstraints { make in
