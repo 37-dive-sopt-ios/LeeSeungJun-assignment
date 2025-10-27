@@ -36,6 +36,7 @@ class LoginViewController: UIViewController {
     private lazy var toggleHidePasswordButton = UIButton().then {
         $0.setImage(.eyeSlash, for: .normal)
         $0.isHidden = true
+        $0.addTarget(self, action: #selector(toggleHidingPassword), for: .touchUpInside)
     }
     
     override func viewDidLoad() {
@@ -43,6 +44,10 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .white
         configureUI()
         hideKeyboardWhenTappedAround()
+    }
+    
+    @objc func toggleHidingPassword() {
+        self.passwordTextField.isSecureTextEntry.toggle()
     }
 }
 
