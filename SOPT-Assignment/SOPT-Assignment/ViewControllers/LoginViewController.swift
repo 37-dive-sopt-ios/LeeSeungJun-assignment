@@ -117,6 +117,8 @@ extension LoginViewController: UITextFieldDelegate {
     
     // 버튼의 활성화 여부를 결정
     func checkLoginButtonValid(_ textField: UITextField, range: NSRange, replacementString string: String) {
+        
+        print("\(textField.text) \(string) \(range)")
         if !string.isEmpty // 추가된 것에 대한 동작
             && ((textField == emailIdTextField && passwordTextField.text?.isEmpty == false)
             || (textField == passwordTextField && emailIdTextField.text?.isEmpty == false))
