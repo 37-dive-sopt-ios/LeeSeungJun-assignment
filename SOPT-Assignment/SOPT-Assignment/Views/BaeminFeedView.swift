@@ -91,81 +91,64 @@ class BaeminFeedView: UIView {
         $0.titleLabel?.font = UIFont(name: Pretendard.Bold.name(), size: 16)
     }
     
-    private lazy var segmentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 20
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner] // top-left + top-right
-        view.layer.shadowColor = UIColor.baeminMint500.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        return view
-    }()
-    
-    lazy var categoryCollectionView: UICollectionView = {
+    lazy var tapViewCollectionView: TapCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        // lineSpacing : 상 줄바꿈되는 간격을 리턴해요.
-        // interItemSpacing : 셀 간의 간격을 리턴해요.
-        // inset : CollectionView의 Section 당 내부 inset을 리턴해요.
+        layout.minimumLineSpacing = 12
+        layout.minimumInteritemSpacing = 8
+        
+        let collection = TapCollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.clipsToBounds = true
+        collection.layer.cornerRadius = 20
+        collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner] // top-left + top-right
+        collection.layer.shadowColor = UIColor.baeminMint500.cgColor
+        collection.layer.shadowOffset = CGSize(width: 0, height: 2)
+        
+        collection.backgroundColor = .white
+        return collection
+    }()
+    
+    lazy var categoryCollectionView: BaeminUICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 12
         layout.minimumInteritemSpacing = 8
         layout.sectionInset = .init(top: 12, left: 28, bottom: 21, right: 18)
         
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collection = BaeminUICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.type = .category
         collection.backgroundColor = .white
         collection.showsHorizontalScrollIndicator = false
+        collection.isPagingEnabled = true
         
         return collection
     }()
     
-    // 버튼이 영역 전체이고 레이블은 폰트가 제각각이라 나누기로 함
-    private lazy var moreInfoButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .white
-        return button
-    }()
-    
-    private lazy var moreInfoHStack = UIStackView().then {
-        $0.axis = .horizontal
-    }
-    
-    private lazy var moreInfoLabel = UILabel().then {
-        $0.font = UIFont(name: Pretendard.Bold.name(), size: 14)
-        $0.text = "음식배달"
-    }
-    
-    private lazy var moreInfoSubLabel = UILabel().then {
-        $0.font = UIFont(name: Pretendard.Regular.name(), size: 14)
-        $0.text = "에서 더보기  "
-    }
-    
-    private lazy var moreInfoArrowImageView = UIImageView().then {
-        $0.image = .rightArrow
-        $0.contentMode = .scaleAspectFit
-    }
-    
-    private lazy var marketCollectionView: UICollectionView = {
+    lazy var marketCollectionView: BaeminUICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 9
         layout.sectionInset = .init(top: 11, left: 16, bottom: 11, right: 16)
         
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collection = BaeminUICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.type = .market
         collection.backgroundColor = .white
         collection.showsHorizontalScrollIndicator = false
         
         return collection
     }()
     
-    private lazy var bannerCollectionView: UICollectionView = {
+    lazy var bannerCollectionView: BaeminUICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collection = BaeminUICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.type = .banner
+        collection.isPagingEnabled = true
         collection.backgroundColor = .white
         collection.showsHorizontalScrollIndicator = false
+        collection.showsVerticalScrollIndicator = false
         
         return collection
     }()
@@ -203,10 +186,12 @@ class BaeminFeedView: UIView {
         $0.setTitleColor(.white, for: .normal)
     }
     
-    private lazy var rankCollectionView: UICollectionView = {
+    lazy var rankCollectionView: BaeminUICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
         
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collection = BaeminUICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.type = .rank
         collection.backgroundColor = .clear
         collection.showsHorizontalScrollIndicator = false
         
@@ -223,9 +208,8 @@ class BaeminFeedView: UIView {
                      feedScrollView])
         feedScrollView.addSubview(feedContentView)
         [headGradientView, bmartImageView, promotionButton,
-         segmentView,
+         tapViewCollectionView,
          categoryCollectionView,
-         moreInfoButton, moreInfoHStack,
          marketCollectionView,
          bannerCollectionView,
          rankGradientView, rankLabel, whiteInfoImage, seeAllButton,
@@ -314,7 +298,7 @@ class BaeminFeedView: UIView {
             make.top.equalTo(bmartImageView.snp.bottom).offset(5)
         }
         
-        segmentView.snp.makeConstraints { make in
+        tapViewCollectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
             make.top.equalTo(headGradientView.snp.bottom).offset(-20)
             make.height.equalTo(48)
@@ -322,32 +306,13 @@ class BaeminFeedView: UIView {
         
         categoryCollectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(segmentView.snp.bottom).offset(2)
-            make.height.equalTo(199) // 10 + 168 + 21
-        }
-        
-        moreInfoButton.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(categoryCollectionView.snp.bottom).offset(2)
-            make.height.equalTo(34)
-        }
-        
-        moreInfoHStack.snp.makeConstraints { make in
-            make.center.equalTo(moreInfoButton)
-            make.height.equalTo(34)
-        }
-        
-        moreInfoHStack.addArrangedSubview(moreInfoLabel)
-        moreInfoHStack.addArrangedSubview(moreInfoSubLabel)
-        moreInfoHStack.addArrangedSubview(moreInfoArrowImageView)
-        
-        moreInfoArrowImageView.snp.makeConstraints { make in
-            make.size.equalTo(6)
+            make.top.equalTo(tapViewCollectionView.snp.bottom).offset(2)
+            make.height.equalTo(233) // 10 + 168 + 21
         }
         
         marketCollectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(moreInfoButton.snp.bottom).offset(10)
+            make.top.equalTo(categoryCollectionView.snp.bottom).offset(10)
             make.height.equalTo(96)
         }
         
@@ -382,7 +347,7 @@ class BaeminFeedView: UIView {
         
         rankCollectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(bannerCollectionView.snp.bottom).offset(10)
+            make.top.equalTo(rankGradientView.snp.bottom).offset(-40)
             make.height.equalTo(243)
             make.bottom.equalToSuperview()
         }
@@ -394,6 +359,107 @@ class BaeminFeedView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+}
+
+enum CollectionType {
+    case category, market, banner, rank, categoryCell
+}
+
+final class BaeminUICollectionView: UICollectionView {
+    var type: CollectionType?
+    
+    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+        super.init(frame: frame, collectionViewLayout: layout)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setType(_ type: CollectionType) {
+        self.type = type
+    }
+}
+
+final class TapCollectionView: UICollectionView {
+
+    private let underlineView = UIView()
+
+    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
+        super.init(frame: frame, collectionViewLayout: layout)
+        basicSetup()
+        setStyle()
+        setLayout()
+    }
+    
+    private func basicSetup() {
+        self.backgroundColor = .clear
+        self.isScrollEnabled = true
+        self.showsHorizontalScrollIndicator = false
+    }
+
+    private func setStyle() {
+        underlineView.do {
+            $0.backgroundColor = .black
+        }
+    }
+
+    private func setLayout() {
+        self.addSubview(underlineView)
+        
+        underlineView.snp.makeConstraints {
+            $0.height.equalTo(3.5)
+            $0.centerY.equalToSuperview().offset(20)
+            $0.width.equalTo(14)
+            $0.leading.equalToSuperview().inset(15)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+struct TapRect {
+    var index: Int
+    var width: CGFloat
+    var xPosition: CGPoint
+}
+
+extension UICollectionView {
+    func fetchCellRectFor(indexPath index: IndexPath,
+        paddingFromLeading: CGFloat, cellHorizontalPadding: CGFloat) -> TapRect {
+        // 1)
+        guard let cellAttributes = self.layoutAttributesForItem(at: index)
+            else { return TapRect(index: 0, width: 0, xPosition: CGPoint()) }
+        // 2)
+        let cellOrigin = cellAttributes.frame.origin
+        // 3)
+        let cellXPosition: CGPoint = CGPoint(
+            x: cellOrigin.x + paddingFromLeading,
+            y: cellOrigin.y)
+        // 4)
+        let cellWidth: CGFloat = cellAttributes.size.width - cellHorizontalPadding
+        
+        return TapRect(index: index.item, width: cellWidth, xPosition: cellXPosition)
+    }
+}
+
+extension TapCollectionView {
+    
+    func moveUnderlineFor(at tappedRect: TapRect, isAnimation: Bool = true) {
+        underlineView.snp.updateConstraints {
+            $0.height.equalTo(3.5)
+            $0.centerY.equalToSuperview().offset(20)
+            $0.width.equalTo(tappedRect.width)
+            $0.leading.equalTo(tappedRect.xPosition.x)
+        }
+        if isAnimation {
+            UIView.animate(withDuration: 0.3) {
+                self.layoutIfNeeded()
+            }
+        }
+    }
 }
 
 extension UIView {
