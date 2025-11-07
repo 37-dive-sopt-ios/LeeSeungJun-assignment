@@ -8,14 +8,11 @@
 import UIKit
 
 struct BannerData {
-    var color: UIColor
+    var image: UIImage
     
     static let data: [BannerData] = [
-        BannerData(color: .red),
-        BannerData(color: .orange),
-        BannerData(color: .yellow),
-        BannerData(color: .green),
-        BannerData(color: .blue),
-        BannerData(color: .purple),
+        BannerData(image: .banner01),
+        BannerData(image: .banner02),
+        BannerData(image: .banner03),
     ]
 }

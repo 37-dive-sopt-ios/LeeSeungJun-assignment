@@ -60,7 +60,7 @@ class BaeminFeedView: UIView {
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
-        
+    
     private lazy var feedContentView = UIView()
     
     private let headGradientLayer = CAGradientLayer().then {
@@ -197,7 +197,6 @@ class BaeminFeedView: UIView {
         
         return collection
     }()
-    
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -349,7 +348,7 @@ class BaeminFeedView: UIView {
             make.horizontalEdges.equalToSuperview()
             make.top.equalTo(rankGradientView.snp.bottom).offset(-40)
             make.height.equalTo(243)
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-30)
         }
         
     }
