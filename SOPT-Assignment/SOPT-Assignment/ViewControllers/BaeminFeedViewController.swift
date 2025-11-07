@@ -195,22 +195,35 @@ extension BaeminFeedViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == self.baeminFeedView.tapViewCollectionView {
             updateTapSelection(to: indexPath)
+            self.baeminFeedView.categoryCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
         }
     }
     
+    // 사용자가 직접 스크롤(스와이프)해서 멈췄을 때 호출됨
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if scrollView == baeminFeedView.categoryCollectionView {
             // 현재 스크롤 위치를 기준으로 페이지 인덱스 계산
             let newIndex = Int(scrollView.contentOffset.x / scrollView.frame.width)
-            
             updateTapSelection(to: IndexPath(row: newIndex, section: 0))
         }
     }
     
+    // 탭 클릭 등으로 인해 프로그래밍 방식의 스크롤이 멈췄을 때 호출됨
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if scrollView == baeminFeedView.categoryCollectionView {
+            // 현재 스크롤 위치를 기준으로 페이지 인덱스 계산
+            let newIndex = Int(scrollView.contentOffset.x / scrollView.frame.width)
+            updateTapSelection(to: IndexPath(row: newIndex, section: 0))
+        }
+    }
+    
+    // IndexPath를 이용해, Tab의 Underline을 이동 + Label textColor 변화
     private func updateTapSelection(to newIndexPath: IndexPath) {
+        // gaurd문 위에 있는 이유, 아래에 있으면 Underline이 생성되지 않는다.
         let selectedTapRect: TapRect = baeminFeedView.tapViewCollectionView.fetchCellRectFor(indexPath: newIndexPath, paddingFromLeading: 10, cellHorizontalPadding: 20)
         baeminFeedView.tapViewCollectionView.moveUnderlineFor(at: selectedTapRect)
-        guard newIndexPath.item != selectedTapIndex else { return }
+        
+        guard newIndexPath.item != selectedTapIndex else { return } // 중복 호출 방지!!
         
         let oldIndexPath = IndexPath(item: selectedTapIndex, section: 0)
         selectedTapIndex = newIndexPath.item
