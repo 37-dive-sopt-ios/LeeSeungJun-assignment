@@ -56,7 +56,7 @@ final class ConfirmButton: UIButton {
     }
     
     func setAvailableMode() {
-        self.backgroundColor = .baeminMint
+        self.backgroundColor = .baeminMint300
         toggle = true
         self.isEnabled = true
     }
