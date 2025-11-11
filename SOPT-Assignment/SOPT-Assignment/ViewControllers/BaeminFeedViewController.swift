@@ -124,7 +124,7 @@ extension BaeminFeedViewController: UICollectionViewDelegate, UICollectionViewDa
 
 extension BaeminFeedViewController: UICollectionViewDelegateFlowLayout {
     
-    // Cell 크기 정의
+    // MARK: Cell 크기 정의
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == baeminFeedView.tapViewCollectionView {
             let categoryName = CategoryData.data[indexPath.item].name
@@ -155,15 +155,13 @@ extension BaeminFeedViewController: UICollectionViewDelegateFlowLayout {
         case .market, .categoryCell :
             return CGSize(width: 58, height: 74)
         case .category :
-            let width: CGFloat = collectionView.frame.self.size.width
-            let height: CGFloat = 235
-            return CGSize(width: width, height: height)
+            return collectionView.bounds.size
         default:
             return .zero
         }
     }
     
-    // 행간
+    // MARK: 행간
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         guard let collection = collectionView as? BaeminUICollectionView else { return 0}
         
@@ -177,7 +175,7 @@ extension BaeminFeedViewController: UICollectionViewDelegateFlowLayout {
         }
     }
     
-    // mergin
+    // MARK: Padding
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         guard let collection = collectionView as? BaeminUICollectionView else { return .zero }
         
@@ -191,11 +189,11 @@ extension BaeminFeedViewController: UICollectionViewDelegateFlowLayout {
         }
     }
     
-    // cell 선택에 대한 대응
+    // MARK: cell 선택에 대한 대응
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == self.baeminFeedView.tapViewCollectionView {
             updateTapSelection(to: indexPath)
-            self.baeminFeedView.categoryCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+            scrollToSelectedCategory(at: indexPath)
         }
     }
     
@@ -204,10 +202,11 @@ extension BaeminFeedViewController: UICollectionViewDelegateFlowLayout {
         if scrollView == baeminFeedView.categoryCollectionView {
             // 현재 스크롤 위치를 기준으로 페이지 인덱스 계산
             let newIndex = Int(scrollView.contentOffset.x / scrollView.frame.width)
+            baeminFeedView.categoryCollectionView.scrollToItem(at: IndexPath(row: newIndex, section: 0), at: .centeredHorizontally, animated: true)
             updateTapSelection(to: IndexPath(row: newIndex, section: 0))
         }
     }
-    
+        
     // 탭 클릭 등으로 인해 프로그래밍 방식의 스크롤이 멈췄을 때 호출됨
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         if scrollView == baeminFeedView.categoryCollectionView {
@@ -234,6 +233,10 @@ extension BaeminFeedViewController: UICollectionViewDelegateFlowLayout {
         if let pastCell = baeminFeedView.tapViewCollectionView.cellForItem(at: oldIndexPath) as? TapCell {
             pastCell.deselected()
         }
+    }
+    
+    private func scrollToSelectedCategory(at indexPath: IndexPath) {
+        baeminFeedView.categoryCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     
 }

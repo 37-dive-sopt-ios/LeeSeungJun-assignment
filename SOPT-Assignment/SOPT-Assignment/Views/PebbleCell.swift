@@ -41,11 +41,6 @@ final class PebbleCell: UICollectionViewCell {
         self.addSubview(title)
         self.addSubview(imageView)
         
-        self.snp.makeConstraints { make in
-            make.width.equalTo(62)
-            make.height.equalTo(78)
-        }
-        
         title.snp.makeConstraints { make in
             make.bottom.centerX.equalToSuperview()
         }

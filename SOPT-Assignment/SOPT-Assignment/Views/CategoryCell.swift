@@ -70,7 +70,7 @@ final class CategoryCell: UICollectionViewCell, UICollectionViewDelegate, UIColl
         
         mainCollection.snp.makeConstraints { make in
             make.top.horizontalEdges.equalToSuperview()
-            make.size.equalTo(201)
+            make.height.equalTo(201)
         }
         
         goDetailButton.snp.makeConstraints { make in

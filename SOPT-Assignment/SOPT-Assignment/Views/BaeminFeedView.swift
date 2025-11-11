@@ -41,9 +41,6 @@ class BaeminFeedView: UIView {
         $0.backgroundColor = .white
         
         $0.addPadding()
-        $0.snp.makeConstraints { make in
-            make.height.equalTo(46)
-        }
         
         $0.autocapitalizationType = .none
         $0.autocorrectionType = .no
@@ -111,9 +108,7 @@ class BaeminFeedView: UIView {
     lazy var categoryCollectionView: BaeminUICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 12
         layout.minimumInteritemSpacing = 8
-        layout.sectionInset = .init(top: 12, left: 28, bottom: 21, right: 18)
         
         let collection = BaeminUICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.type = .category
