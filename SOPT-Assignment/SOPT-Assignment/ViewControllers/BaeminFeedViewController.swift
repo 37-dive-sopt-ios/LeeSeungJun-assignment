@@ -221,7 +221,7 @@ extension BaeminFeedViewController: UICollectionViewDelegateFlowLayout {
         // gaurd문 위에 있는 이유, 아래에 있으면 Underline이 생성되지 않는다.
         let selectedTapRect: TapRect = baeminFeedView.tapViewCollectionView.fetchCellRectFor(indexPath: newIndexPath, paddingFromLeading: 10, cellHorizontalPadding: 20)
         baeminFeedView.tapViewCollectionView.moveUnderlineFor(at: selectedTapRect)
-        
+        baeminFeedView.tapViewCollectionView.scrollToItem(at: newIndexPath, at: .centeredHorizontally, animated: true)
         guard newIndexPath.item != selectedTapIndex else { return } // 중복 호출 방지!!
         
         let oldIndexPath = IndexPath(item: selectedTapIndex, section: 0)
