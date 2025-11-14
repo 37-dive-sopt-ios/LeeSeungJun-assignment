@@ -36,8 +36,11 @@ final class ServerViewController: BaseViewController {
       }
     }
   }
+  
   private let provider: NetworkProviding
   private var userId: Int = -1
+  private let storage = UserDefaults.standard
+  private let userIdDKey: String = "userId"
 
   // MARK: - UI Components
   //ui요소 정의
@@ -76,7 +79,7 @@ final class ServerViewController: BaseViewController {
       let textField = UITextField()
       textField.placeholder = "이름 (예: 홍길동)"
       textField.borderStyle = .roundedRect
-      textField.text = "이승준"  // 테스트용 기본값
+      // textField.text = "이승준"  // 테스트용 기본값
       textField.addPadding()
       return textField
   }()
@@ -87,7 +90,7 @@ final class ServerViewController: BaseViewController {
       textField.borderStyle = .roundedRect
       textField.keyboardType = .emailAddress
       textField.autocapitalizationType = .none
-      textField.text = "test@naver.com"  // 테스트용 기본값
+      // textField.text = "test@naver.com"  // 테스트용 기본값
       textField.addPadding()
       return textField
   }()
@@ -97,7 +100,7 @@ final class ServerViewController: BaseViewController {
       textField.placeholder = "나이 (예: 25)"
       textField.borderStyle = .roundedRect
       textField.keyboardType = .numberPad
-      textField.text = "27"  // 테스트용 기본값
+      // textField.text = "27"  // 테스트용 기본값
       textField.addPadding()
       return textField
   }()
@@ -112,9 +115,10 @@ final class ServerViewController: BaseViewController {
   init(provider: NetworkProviding = NetworkProvider()) {
     self.provider = provider
     super.init(nibName: nil, bundle: nil)
-//      Task {
-//          await performGetUser(userId: self.userId)
-//      }
+    userId = storage.object(forKey: userIdDKey) as? Int ?? -1
+    Task {
+      await performGetUser(userId: self.userId)
+    }
   }
   
   required init?(coder: NSCoder) {
@@ -150,8 +154,8 @@ final class ServerViewController: BaseViewController {
   
   private func setLayout() {
       titleLabel.snp.makeConstraints {
-          $0.top.equalTo(view.safeAreaLayoutGuide)
-          $0.horizontalEdges.equalToSuperview().inset(20)
+        $0.top.equalToSuperview().offset(70)
+        $0.horizontalEdges.equalToSuperview().inset(20)
       }
       
       usernameTextField.snp.makeConstraints {
@@ -291,6 +295,7 @@ final class ServerViewController: BaseViewController {
       do {
           let _ = try await UserAPI.performDeleteUser(id: self.userId)
           titleLabel.text = "😨 회원탈퇴 완료"
+        storage.removeObject(forKey: userIdDKey)
       } catch let error as NetworkError {
           // 콘솔에 상세 에러 로그 출력
           print("🚨 [Delete Error] \(error.detailedDescription)")
@@ -314,6 +319,7 @@ final class ServerViewController: BaseViewController {
           nameTextField.text = response.name
           emailTextField.text = response.email
           ageTextField.text = String(response.age)
+          storage.set(response.id, forKey: userIdDKey)
           self.userId = response.id
           switch response.status {
           case "ACTIVE":
@@ -361,7 +367,8 @@ final class ServerViewController: BaseViewController {
           )
           
           // 성공 시 titleLabel 수정
-          titleLabel.text = response.username + "🥳 회원가입 성공"
+        storage.set(response.id, forKey: userIdDKey)
+        titleLabel.text = response.username + "🥳 회원가입 성공"
       } catch let error as NetworkError {
           // 콘솔에 상세 에러 로그 출력
           print("🚨 [Register Error] \(error.detailedDescription)")
@@ -381,25 +388,26 @@ final class ServerViewController: BaseViewController {
       loadingIndicator.startAnimating()
       
       do {
-          // UserAPI의 convenience method 사용
-          let response = try await UserAPI.performLogin(
-              username: username,
-              password: password,
-              provider: provider
-          )
-          
-          // 성공 시
-          // User Id 저장
-          self.userId = response.userId
-          titleLabel.text = "😆 로그인 성공"
+        // UserAPI의 convenience method 사용
+        let response = try await UserAPI.performLogin(
+          username: username,
+          password: password,
+          provider: provider
+        )
+        
+        // 성공 시
+        // User Id 저장
+        self.userId = response.userId
+        storage.set(response.userId, forKey: userIdDKey)
+        titleLabel.text = "😆 로그인 성공"
       } catch let error as NetworkError {
-          // 콘솔에 상세 에러 로그 출력
-          print("🚨 [Login Error] \(error.detailedDescription)")
-          // 사용자에게는 친절한 메시지 표시
-          showAlert(title: "로그인 실패", message: error.localizedDescription)
+        // 콘솔에 상세 에러 로그 출력
+        print("🚨 [Login Error] \(error.detailedDescription)")
+        // 사용자에게는 친절한 메시지 표시
+        showAlert(title: "로그인 실패", message: error.localizedDescription)
       } catch {
-          print("🚨 [Login Unknown Error] \(error)")
-          showAlert(title: "로그인 실패", message: error.localizedDescription)
+        print("🚨 [Login Unknown Error] \(error)")
+        showAlert(title: "로그인 실패", message: error.localizedDescription)
       }
       
       loadingIndicator.stopAnimating()
