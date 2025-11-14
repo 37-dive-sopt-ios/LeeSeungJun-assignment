@@ -116,7 +116,7 @@ final class ServerViewController: BaseViewController {
     self.provider = provider
     super.init(nibName: nil, bundle: nil)
     userId = storage.object(forKey: userIdDKey) as? Int ?? -1
-    guard userId != -1 else { return } // -1 
+    guard userId != -1 else { return }
     Task {
       await performGetUser(userId: self.userId)
     }
