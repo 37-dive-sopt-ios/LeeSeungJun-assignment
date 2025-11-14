@@ -53,12 +53,5 @@ open class BaseViewController: UIViewController, Alertable, LoadingIndicatorable
         view.addGestureRecognizer(tapGesture)
     }
     
-    // MARK: - Methods
-    
-    /// 키보드 닫기
-    @objc
-    open func dismissKeyboard() {
-        view.endEditing(true)
-    }
 }
 

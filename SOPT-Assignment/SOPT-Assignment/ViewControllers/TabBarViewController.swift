@@ -21,8 +21,8 @@ final class TabBarController: UITabBarController {
         let firstTabBar = BaeminFeedViewController()
         firstTabBar.tabBarItem = UITabBarItem(title: "홈", image: .homeSelected, tag: 0)
         
-        let secondTabBar = UINavigationController(rootViewController: UIViewController().then { $0.view.backgroundColor = .red} )
-        secondTabBar.tabBarItem = UITabBarItem(title: "장보기·쇼핑", image: .shop, tag: 1)
+        let secondTabBar = UINavigationController(rootViewController: ServerViewController())
+        secondTabBar.tabBarItem = UITabBarItem(title: "장보기·쇼핑", image: UIImage(systemName: "server.rack"), tag: 1)
         
         let thirdTabBar = UINavigationController(rootViewController: UIViewController().then { $0.view.backgroundColor = .orange} )
         thirdTabBar.tabBarItem = UITabBarItem(title: "찜", image: .heart, tag: 2)
