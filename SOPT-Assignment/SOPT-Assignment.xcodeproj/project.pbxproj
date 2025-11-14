@@ -16,7 +16,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		63B01F572EAC9BF800C2541E /* Exceptions for "SOPT-Assignment" folder in "SOPT-Assignment" target */ = {
+		63C3A9032EC2F1BE00DD2277 /* Exceptions for "SOPT-Assignment" folder in "SOPT-Assignment" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -29,7 +29,7 @@
 		63B01F472EAC9BF600C2541E /* SOPT-Assignment */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				63B01F572EAC9BF800C2541E /* Exceptions for "SOPT-Assignment" folder in "SOPT-Assignment" target */,
+				63C3A9032EC2F1BE00DD2277 /* Exceptions for "SOPT-Assignment" folder in "SOPT-Assignment" target */,
 			);
 			path = "SOPT-Assignment";
 			sourceTree = "<group>";
@@ -215,6 +215,8 @@
 		};
 		63B01F5B2EAC9BF800C2541E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 63B01F472EAC9BF600C2541E /* SOPT-Assignment */;
+			baseConfigurationReferenceRelativePath = App/Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -279,6 +281,8 @@
 		};
 		63B01F5C2EAC9BF800C2541E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 63B01F472EAC9BF600C2541E /* SOPT-Assignment */;
+			baseConfigurationReferenceRelativePath = App/Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
