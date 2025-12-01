@@ -11,42 +11,20 @@ final class LoginViewModel {
     
     // MARK: Properties
 
-    var id = CurrentValueSubject<String, Never>("")
-
-    var password = CurrentValueSubject<String, Never>("") // combineLatest를 쓰기 위해서는 Publisher를 따르는 타입이어야 한다.
-
+    var id = PassthroughSubject<String, Never>()
+    var password = PassthroughSubject<String, Never>() // combineLatest를 쓰기 위해서는 Publisher를 따르는 타입이어야 한다.
+    @Published var isLoginEnabled: AnyPublisher<Bool, Never>
     
-
-    @Published var isLoginEnabled = false
-
-    
-
     private var cancellables: Set<AnyCancellable> = []
-
     
-
     // MARK: initializer
-
     
-
     init() {
-
-        cancellable = id
-
+        isLoginEnabled = id
             .combineLatest(password) { id, password in
-
                 return !id.isEmpty && !password.isEmpty
-
             }
-
-            .sink { [weak self] in
-
-                guard let self else { return }
-
-                isLoginEnabled = $0
-
-            }
-
+            .eraseToAnyPublisher()
     }
 
 }
