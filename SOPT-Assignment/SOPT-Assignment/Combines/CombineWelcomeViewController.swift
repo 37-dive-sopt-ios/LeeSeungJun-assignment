@@ -9,9 +9,13 @@ import UIKit
 import SnapKit
 import Then
 
-class CombineWelcomeViewController: UIViewController {
+final class CombineWelcomeViewController: UIViewController {
+    
+    // MARK: Properties
     
     private var dismissAction: (() -> Void)?
+    
+    // MARK: UI Components
     
     private lazy var navigationBar = CustomNavigationBar().then {
         $0.configure(title: "대체 누가 뼈짐 시켰어??", delegate: self)
@@ -39,24 +43,13 @@ class CombineWelcomeViewController: UIViewController {
         $0.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     
+    // MARK: Setup Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubviews()
         setConstraints()
-    }
-    
-    @objc func backButtonTapped() {
-        if dismissAction != nil {
-            dismissAction!()
-        }
-        let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
-        sceneDelegate?.changeRootViewController(TabBarController(), animated: false)
-    }
-    
-    func configure(email: String, dismissAction: @escaping () -> Void) {
-        welcomeSubLabel.text = "\(email)님 반가워요!"
-        self.dismissAction = dismissAction
     }
     
     func addSubviews() {
@@ -95,6 +88,22 @@ class CombineWelcomeViewController: UIViewController {
         }
     }
     
+    // MARK: Action Methods
+    
+    @objc func backButtonTapped() {
+        if dismissAction != nil {
+            dismissAction!()
+        }
+        let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
+        sceneDelegate?.changeRootViewController(TabBarController(), animated: false)
+    }
+    
+    // MARK: Public Methods
+    
+    func configure(email: String, dismissAction: @escaping () -> Void) {
+        welcomeSubLabel.text = "\(email)님 반가워요!"
+        self.dismissAction = dismissAction
+    }
 }
 
 #Preview {
