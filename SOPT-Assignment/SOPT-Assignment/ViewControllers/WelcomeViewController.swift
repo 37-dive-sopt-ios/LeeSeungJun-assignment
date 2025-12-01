@@ -65,9 +65,8 @@ class WelcomeViewController: UIViewController {
     }
     
     @objc func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
-        guard let delegate = self.delegate else { return }
-        delegate.didTapGoBackButton()
+        let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
+        sceneDelegate?.changeRootViewController(TabBarController(), animated: false)
     }
     
     func configure(email: String, delegate: WelcomeViewControllerDelegate) {
