@@ -5,11 +5,18 @@
 //  Created by 이승준 on 10/25/25.
 //
 
+import Combine
 import UIKit
+
 import SnapKit
 import Then
 
-class CombineLoginViewController: UIViewController {
+final class CombineLoginViewController: UIViewController, UITextFieldDelegate {
+    
+    // MARK: Properties
+    
+    private let viewModel = LoginViewModel()
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: UI Components
     
@@ -49,13 +56,14 @@ class CombineLoginViewController: UIViewController {
         $0.titleLabel?.font = UIFont(name: Pretendard.Regular.name(), size: 14)
     }
     
-    // MARK: Setup
+    // MARK: Setup Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         configureUI()
         hideKeyboardWhenTappedAround()
+        setSubscription()
         self.navigationController?.navigationBar.isHidden = true
     }
     
@@ -106,6 +114,35 @@ class CombineLoginViewController: UIViewController {
         }
     }
     
+    private func setSubscription() {
+        emailIdTextField
+            .textDidChangePublisher()
+            .sink { [weak self] id in
+                guard let self else { return }
+                self.viewModel.id.send(id)
+            }
+            .store(in: &cancellables)
+        
+        passwordTextField
+            .textDidChangePublisher()
+            .sink { [weak self] password in
+                guard let self else { return }
+                self.viewModel.password.send(password)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.isLoginEnabled
+            .sink { [weak self] isEnabled in
+                guard let self else { return }
+                if isEnabled {
+                    loginButton.setAvailableMode()
+                } else {
+                    loginButton.setUnavailableMode()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
     // MARK: Action Methods
     
     @objc func clearTextField() {
@@ -151,64 +188,6 @@ class CombineLoginViewController: UIViewController {
         return textField
     }
     
-}
-
-// MARK: Extensions
-
-extension CombineLoginViewController: UITextFieldDelegate {
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.setEdittingMode()
-        if textField == self.passwordTextField {
-            clearPasswordButton.isHidden = false
-            toggleHidePasswordButton.isHidden = false
-        }
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.setEdittingEndMode()
-        if textField == self.passwordTextField {
-            clearPasswordButton.isHidden = true
-            toggleHidePasswordButton.isHidden = true
-        }
-    }
-    
-    // 입력, 삭제할 때마다 호출
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // textField.text (편집 이전의 Text)
-        // string : 추가된 텍스트 (긴 글을 붙여넣을 수 있으므로 String)
-        
-        // NSRange: TextField가 모두 지워질 때의 값 알아보기
-        // location = 0, length = textField.text.count
-        
-        // " " 공백 입력 무시
-        if string == " " {
-            // 추후에 경고를 띄울 수도 있다.
-            return false
-        }
-        
-        checkLoginButtonValid(textField, range: range, replacementString: string)
-        return true
-    }
-    
-    // 버튼의 활성화 여부를 결정
-    func checkLoginButtonValid(_ textField: UITextField, range: NSRange, replacementString string: String) {
-        
-        print("\(textField.text) \(string) \(range)")
-        if !string.isEmpty // 추가된 것에 대한 동작
-            && ((textField == emailIdTextField && passwordTextField.text?.isEmpty == false)
-            || (textField == passwordTextField && emailIdTextField.text?.isEmpty == false))
-        {
-            loginButton.setAvailableMode()
-        }
-        else if
-            string.isEmpty // 삭저된 것에 대한 동작 -> 해당 TextField의 값이 모두 지워진 것인지 조사
-            && range.location == 0
-            && range.length == textField.text?.count
-        {
-            loginButton.setUnavailableMode()
-        }
-    }
 }
 
 #Preview {
